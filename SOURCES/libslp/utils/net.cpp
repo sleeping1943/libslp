@@ -22,19 +22,19 @@ namespace slp{namespace net{
         addr.sin_port = htons(port);
         addr.sin_family = AF_INET;
         if(::inet_pton(AF_INET,ip,&addr.sin_addr) <= 0) {
-            perror("inet_pton:");
+            /* perror("inet_pton:"); */
             return false;
         }
     
         sockfd = ::socket(AF_INET,SOCK_STREAM,0);
         if (!sockfd) {
-            perror("socket:");
+            /* perror("socket:"); */
             return false;
         }
 
         connfd = ::connect(sockfd,(struct sockaddr*)&addr,sizeof(addr));
         if (connfd < 0) {
-            perror("connect:");
+            /* perror("connect:"); */
             return false;
         }
 
@@ -60,7 +60,7 @@ namespace slp{namespace net{
 
         int errnum = ::poll(&events,1,time);  /* 3秒超时 */
         if (errnum <= 0) {
-            perror("try_write[poll]:");
+            /* perror("try_write[poll]:"); */
             return false;
         }else if (errnum == 0) { 
             *ret = errnum;
@@ -92,7 +92,7 @@ namespace slp{namespace net{
         events.events = POLLIN | POLLERR | POLLHUP | POLLNVAL;
         int errnum = ::poll(&events,1,time);
         if (errnum < 0) {
-            perror("try_read[poll]:");
+            /* perror("try_read[poll]:"); */
             return false;
         }else if (errnum == 0) { 
             *ret = errnum;
@@ -105,7 +105,7 @@ namespace slp{namespace net{
         if (events.revents & POLLIN){   /* 是否有数据可读,3秒超时 */
             *ret = ::read(events.fd,content,size*sizeof(char));
         }
-        std::cout << slp::YELLOW << "tre_read_true..." << slp::NONE << std::endl;
+        /* std::cout << slp::YELLOW << "tre_read_true..." << slp::NONE << std::endl; */
         return true;
     }
 
