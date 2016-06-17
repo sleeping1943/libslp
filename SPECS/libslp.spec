@@ -44,9 +44,10 @@ This library is builded to help myself
 %clean
 
 %package devel
-Summary:        library-devel for sleeping 
+Summary:        Development files for %{name} 
+Group:          Development/Libraries
 BuildRequires:  gcc-c++ >= 4.8.5 
-Requires:       %{name}=%{?version}
+Requires:       %{name} = %{?version}
 %description devel
 The signs for libslp
 %files devel

@@ -8,3 +8,4 @@ clean_rpms:
 
 clean:clean_rpms
 	@rm -fr ./BUILDROOT/*
+	@make clean -C ./SOURCES/libslp

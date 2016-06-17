@@ -15,18 +15,21 @@ namespace slp{namespace net{
     *
     * @return  成功：true,失败：false
     */
-    bool connect(char* ip,short port);
+
+    bool connect(char* ip,short port,int* fd);
+    
     /**
      * @brief 具有超时限制的写操作
      *
      * @param fd    有效的socket描述符
-     * @param content   用于待发送数据的缓冲区
+     * @param content   发送数据的缓冲区
      * @param size  缓冲区大小
      * @param time  超时时间
+     * @param ret   错误码
      *
      * @return  成功:true,失败:false
      */
-    bool try_write(int fd,void *content,size_t size,int time); 
+    bool try_write(int fd,void *content,size_t size,int time,int *ret);
     /**
      * @brief 具有超时限制的读操作
      *
@@ -38,6 +41,15 @@ namespace slp{namespace net{
      *
      * @return  成功:true,失败:false
      */
-    bool try_read(int fd,void *content,size_t size,int time,int *ret); 
+    bool try_read(int fd,void *content,size_t size,int time,int *ret);
+
+    /**
+     * @brief   检测socket连接是否存活
+     *
+     * @param fd socket连接描述符
+     *
+     * @return true：连接正常，false:连接断开
+     */
+    bool isalive (int fd);
 }};
 #endif /* _LIBSLP_H */

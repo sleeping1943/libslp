@@ -2,6 +2,9 @@
 #include <poll.h>
 #include <unistd.h>
 
+#include <iostream>
+#include "textcolor.h"
+
 namespace slp{namespace net{
 
     /**
@@ -57,9 +60,13 @@ namespace slp{namespace net{
 
         int errnum = ::poll(&events,1,time);  /* 3秒超时 */
         if (errnum <= 0) {
-            perror("poll:");
+            perror("try_write[poll]:");
+            return false;
+        }else if (errnum == 0) { 
+            *ret = errnum;
             return false;
         }else if (events.revents & (POLLERR | POLLHUP | POLLNVAL)) { 
+            *ret = -1;
             return false; 
         }
         if (events.revents & POLLOUT) {
@@ -84,25 +91,47 @@ namespace slp{namespace net{
         events.fd = fd;
         events.events = POLLIN | POLLERR | POLLHUP | POLLNVAL;
         int errnum = ::poll(&events,1,time);
-        if (errnum <= 0) {
-            perror("poll:");
+        if (errnum < 0) {
+            perror("try_read[poll]:");
+            return false;
+        }else if (errnum == 0) { 
+            *ret = errnum;
             return false;
         }else if (events.revents & (POLLERR | POLLHUP | POLLNVAL)) { 
+            *ret = -1;
             return false; 
         }
 
         if (events.revents & POLLIN){   /* 是否有数据可读,3秒超时 */
             *ret = ::read(events.fd,content,size*sizeof(char));
         }
+        std::cout << slp::YELLOW << "tre_read_true..." << slp::NONE << std::endl;
         return true;
     }
 
     bool isalive (int fd) {
+
+        if (fd == 0)return false;
         pollfd events;
         events.fd = fd;
-        events.events = POLLOUT | POLLERR | POLLHUP | POLLNVAL;
+        events.events = POLLOUT;
+        events.revents = 0;
         int errnum = ::poll(&events,1,200);
-        if (errnum > 0 &&  (events.revents & POLLOUT)) {return true;}
+        if (errnum > 0) {
+            if (events.revents & POLLRDHUP) {
+                std::cout << slp::YELLOW << "POLLRDHUP--isalive:true..." << slp::NONE << std::endl;
+                return false;
+            }
+            if (events.revents & (POLLERR | POLLHUP | POLLNVAL)) {
+                ::close(fd);
+                return false;
+            }
+            if (events.revents & POLLOUT) {
+                std::cout << slp::RED << "isalive:true..." << slp::NONE << std::endl;
+                return true;
+            }
+        }
+        std::cout << slp::YELLOW << "isalive:false..." << slp::NONE << std::endl;
         return false;
     }
 }};
