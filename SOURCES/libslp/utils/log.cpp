@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <iostream>
 
+
 using std::cout;
 using std::endl;
 using std::stringstream;
@@ -25,30 +26,32 @@ namespace slp{namespace log{
             ss << std::setfill('0') << std::setw(4) << (1900 + t->tm_year) << "-"
                << std::setw(2) << 1+t->tm_mon << "-" << std::setw(2) << t->tm_mday
                << " " << std::setw(2) << t->tm_hour << ":" << std::setw(2) << t->tm_min
-               << ";" << std::setw(2) << t->tm_sec;
+               << ":" << std::setw(2) << t->tm_sec;
             str_last_time = ss.str();
             return str_last_time;
         }
 
 
         bool log::trace(time_t tt,std::string func,std::string msg,level l) {
+            lock_guard<mutex> tmp_guard(log::m);
             switch (l) {
                 case error:         
-                    cout << slp::RED << log::time_now(tt) << "[" << func <<"]" << msg << slp::NONE << endl;
+                    cout << slp::RED << log::time_now(tt) << " [" << func <<"] " << msg << slp::NONE << endl;
                     break;
                 case warning:         
-                    cout << slp::YELLOW << log::time_now(tt) << "[" << func <<"]" << msg << slp::NONE << endl;
+                    cout << slp::YELLOW << log::time_now(tt) << " [" << func <<"] " << msg << slp::NONE << endl;
                     break;
                 case debug:         
-                    cout << slp::CYAN << log::time_now(tt) << "[" << func <<"]" << msg << slp::NONE << endl;
+                    cout << slp::CYAN << log::time_now(tt) << " [" << func <<"] " << msg << slp::NONE << endl;
                     break;
                 case print:         
-                    cout << slp::GREEN << log::time_now(tt) << "[" << func <<"]" << msg << slp::NONE << endl;
+                    cout << slp::GREEN << log::time_now(tt) << " [" << func <<"] " << msg << slp::NONE << endl;
                     break;
                 default:
-                    cout << slp::LIGHT_GRAY << log::time_now(tt) << "[" << func <<"]" << msg << slp::NONE << endl;
+                    cout << slp::LIGHT_GRAY << log::time_now(tt) << " [" << func <<"] " << msg << slp::NONE << endl;
                     break;
             }
             return true;
         }
+      mutex log::m;
 }};

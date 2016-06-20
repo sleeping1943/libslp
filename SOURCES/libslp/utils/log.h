@@ -11,6 +11,7 @@
 #define _LIBSLP_LOG_H
 #include <time.h>
 #include <string>
+#include <mutex>
 namespace slp{namespace log{
 
         enum level{
@@ -19,10 +20,13 @@ namespace slp{namespace log{
             debug = 2,
             print = 3
         };
+        using std::mutex;
+        using std::lock_guard;
         class log{
             public:
                 log(){};
                 ~log(){};
+                static mutex m;
                 static std::string time_now(time_t tt);
                 static bool trace(time_t tt,std::string func,std::string msg,level l); 
 

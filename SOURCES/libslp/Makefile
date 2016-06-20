@@ -13,10 +13,10 @@ ifeq (${dbg},1)
 endif
 
 ${target}${suffix}:${objs}
-	${CXX} ${LDFALGS} $@ $^
+	${CXX} ${LDFALGS} $@ $^ -pthread
 
 ${objs}:%.o:%.cpp
-	${CXX} ${CFALGS} $@ $<
+	${CXX} ${CFALGS} $@ $< -std=c++11
 show:
 	@echo -e "target:\033[31m${target}${suffix}\033[m"
 	@echo -e "suffix:\033[31m${suffix}\033[m"
