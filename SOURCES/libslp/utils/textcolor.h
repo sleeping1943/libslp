@@ -32,11 +32,11 @@
 namespace slp{
 
 	const std::string 	NONE        =  "\033[m" 		;   /* 默认 */
-	const std::string  	RED         =  "\033[0;32;31m" 	;   /* 红色 */
+	const std::string  	RED         =  "\033[0;31m" 	;   /* 红色 */
 	const std::string 	LIGHT_RED   =  "\033[1;31m" 	;   /* 浅红 */
-	const std::string  	GREEN       =  "\033[0;32;32m" 	;   /* 绿色 */
+	const std::string  	GREEN       =  "\033[0;32m" 	;   /* 绿色 */
 	const std::string  	LIGHT_GREEN =  "\033[1;32m" 	;   /* 浅绿 */
-	const std::string  	BLUE        =  "\033[0;32;34m" 	;   /* 蓝色 */
+	const std::string  	BLUE        =  "\033[0;34m" 	;   /* 蓝色 */
 	const std::string  	LIGHT_BLUE  =  "\033[1;34m" 	;   /* 浅蓝 */
 	const std::string  	DARY_GRAY   =  "\033[1;30m" 	;   /* 深灰 */
 	const std::string  	CYAN        =  "\033[0;36m" 	;   /* 青色 */
@@ -44,7 +44,8 @@ namespace slp{
 	const std::string  	PURPLE      =  "\033[0;35m" 	;   /* 紫色 */
 	const std::string  	LIGHT_PURPLE=  "\033[1;35m" 	;   /* 淡紫 */
 	const std::string  	BROWN       =  "\033[0;33m" 	;   /* 棕色 */
-	const std::string 	YELLOW      =  "\033[1;33m" 	;   /* 黄色 */
+	const std::string 	YELLOW      =  "\033[0;33m" 	;   /* 黄色 */
+	const std::string 	LIGHT_YELLOW =  "\033[1;33m" 	;   /* 浅黄色 */
 	const std::string 	LIGHT_GRAY  =  "\033[0;37m" 	;   /* 浅灰 */
 	const std::string  	WHITE       =  "\033[1;37m"		;   /* 白色 */
 
