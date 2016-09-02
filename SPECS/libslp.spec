@@ -26,7 +26,9 @@ This library is builded to help myself
     cd -
     mkdir -p %{?buildroot}%{?_libdir}/%{name}
     mkdir -p %{?buildroot}%{?_includedir}/%{name}
+    mkdir -p %{?buildroot}%{_mandir}/man3
     cp %{_sourcedir}/%{name}/*.so %{?buildroot}%{?_libdir}/%{name}
+    cp %{_sourcedir}/%{name}/doc/man/man3/* %{?buildroot}%{_mandir}/man3
     cd %{?buildroot}%{?_libdir}
     ln %{name}/%{name}_utils.so %{name}_utils.so -s
     cd -
@@ -53,4 +55,5 @@ The signs for libslp
 %files devel
     %defattr(-,root,root,-)
     %{?_includedir}/%{name}/*.h
+    %{_mandir}/man3/*
 
