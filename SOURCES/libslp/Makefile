@@ -12,8 +12,10 @@ ifeq (${dbg},1)
 	suffix:=_debug.so
 endif
 
+
 ${target}${suffix}:${objs}
-	${CXX} ${LDFALGS} $@ $^ -pthread
+	${CXX} ${LDFALGS} $@ $^ -pthread -lhiredis
+	@echo -e "\033[32m生成动态库:$@\033[m"
 
 ${objs}:%.o:%.cpp
 	${CXX} ${CFALGS} $@ $< -std=c++11

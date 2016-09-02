@@ -7,8 +7,8 @@
 *date     : 2016年07月28日 星期四 15时49分30秒
 *
 ************************************/
-#ifndef _SLP_/ROOT/GIT/LIBSLP/SOURCES/LIBSLP/UTILS/CODEC_H
-#define _SLP_/ROOT/GIT/LIBSLP/SOURCES/LIBSLP/UTILS/CODEC_H
+#ifndef _SLP_CODEC_H
+#define _SLP_CODEC_H
 
 #include <iostream>
 
@@ -31,4 +31,4 @@ namespace slp{namespace codec{
     };
 }}
 
-#endif /*_SLP_/ROOT/GIT/LIBSLP/SOURCES/LIBSLP/UTILS/CODEC_H*/
+#endif /*_SLP_CODEC_H*/
