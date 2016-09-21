@@ -43,88 +43,88 @@ namespace slp{
     /**
      * @brief 默认颜色
     */
-	const std::string 	NONE        =  "\033[m";  
+	const static char* NONE        =  "\033[m";  
     
     /**
      * @brief 红色
      */
-	const std::string  	RED         =  "\033[0;31m"; 
+	const static char* RED         =  "\033[0;31m"; 
 
 
     /**
      * @brief 浅红
      */
-	const std::string 	LIGHT_RED   =  "\033[1;31m"; 
+	const static char* LIGHT_RED   =  "\033[1;31m"; 
     
     /**
      * @brief 绿色
      */
-	const std::string  	GREEN       =  "\033[0;32m";  
+	const static char* GREEN       =  "\033[0;32m";  
 
     /**
      * @brief 浅绿
      */
-	const std::string  	LIGHT_GREEN =  "\033[1;32m"; 
+	const static char* LIGHT_GREEN =  "\033[1;32m"; 
 
     /**
      * @brief 蓝色
      */
-	const std::string  	BLUE        =  "\033[0;34m";
+	const static char* BLUE        =  "\033[0;34m";
 
     /**
      * @brief 浅蓝
      */
-	const std::string  	LIGHT_BLUE  =  "\033[1;34m"; 
+	const static char* LIGHT_BLUE  =  "\033[1;34m"; 
 
     /**
      * @brief 深灰
      */
-	const std::string  	DARY_GRAY   =  "\033[1;30m";
+	const static char* DARY_GRAY   =  "\033[1;30m";
 
     /**
      * @brief 青色
      */
-	const std::string  	CYAN        =  "\033[0;36m"; 
+	const static char* CYAN        =  "\033[0;36m"; 
 
     /**
      * @brief 淡青
      */
-	const std::string  	LIGHT_CYAN  =  "\033[1;36m";
+	const static char* LIGHT_CYAN  =  "\033[1;36m";
 
     /**
      * @brief 紫色
      */
-	const std::string  	PURPLE      =  "\033[0;35m"; 
+	const static char* PURPLE      =  "\033[0;35m"; 
 
     /**
      * @brief 淡紫
      */
-	const std::string  	LIGHT_PURPLE=  "\033[1;35m";
+	const static char* LIGHT_PURPLE=  "\033[1;35m";
 
     /**
      * @brief 棕色
      */
-	const std::string  	BROWN       =  "\033[0;33m"; 
+	const static char* BROWN       =  "\033[0;33m"; 
 
     /**
      * @brief  黄色
      */
-	const std::string 	YELLOW      =  "\033[0;33m";
+	const static char* YELLOW      =  "\033[0;33m";
 
     /**
      * @brief 浅黄色
      */
-	const std::string 	LIGHT_YELLOW =  "\033[1;33m";  
+	const static char* LIGHT_YELLOW =  "\033[1;33m";  
 
     /**
      * @brief 浅灰
      */
-	const std::string 	LIGHT_GRAY  =  "\033[0;37m"; 
+	const static char* LIGHT_GRAY   =  "\033[0;37m"; 
 
     /**
      * @brief 白色
      */
-	const std::string  	WHITE       =  "\033[1;37m"; 
+	const static char* WHITE        =  "\033[1;37m"; 
 
 
     /**

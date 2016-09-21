@@ -7,12 +7,28 @@
 *date     : 2016年07月28日 星期四 15时49分46秒
 *
 ************************************/
+
+/*
+ *for C library
+ */
+#include <string.h>
+
+/*
+ *for C++ library
+ */
+#include <map>
+
+/*
+ *for user library
+ */
 #include "codec.h"
+#include "log.h"
 
 
 namespace slp{namespace codec{
 
-
+using slp::log::log;
+using slp::log::level;
 const char* base64char = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 char* codec_base64::decode(const unsigned char* src,char* dst) 
@@ -135,4 +151,92 @@ char* codec_base64::base64_encode(const unsigned char* src,char* dst,int length)
     return dst;
 }
 
+
+char* codec_url::decode(const unsigned char* src,char* dst)
+{
+    return (char*)this->urldecode(src,(unsigned char*)dst);
+}
+
+char* codec_url::encode(const unsigned char* src,char* dst,int length)
+{
+    return (char*)this->urlencode(src,(unsigned char*)dst,length);
+}
+
+unsigned char* codec_url::urldecode(const unsigned char* encd,unsigned char* decd)
+{
+    int j,i;   
+    char *cd =(char*) encd;   
+    char p[2];   
+    j=0;   
+  
+    int len = strlen(cd);
+    for( i = 0; i < len; i++ ) {   
+        memset( p, '\0', 2 );   
+        if( cd[i] != '%' ) {   
+            decd[j++] = cd[i];   
+            continue;   
+        }   
+        p[0] = cd[++i];   
+        p[1] = cd[++i];   
+        p[0] = p[0] - 48 - ((p[0] >= 'A') ? 7 : 0) - ((p[0] >= 'a') ? 32 : 0);   
+        p[1] = p[1] - 48 - ((p[1] >= 'A') ? 7 : 0) - ((p[1] >= 'a') ? 32 : 0);   
+        decd[j++] = (unsigned char)(p[0] * 16 + p[1]);   
+    }   
+    decd[j] = '\0';   
+    return decd;   
+}
+
+char*  codec_url::urlencode(const unsigned char * src, unsigned char * dest, int  dest_len )
+{
+   unsigned char ch;   
+   int  len = 0;   
+    
+   while (len < (dest_len - 4) && *src)   
+   {   
+       ch = (unsigned char)*src;   
+       if (*src == ' ') {   
+           *dest++ = '+';   
+       }   
+       else if (is_alpha_number_char(ch) || strchr("=!~*'()", ch)) {   
+           *dest++ = *src;   
+       }   
+       else {   
+           *dest++ = '%';   
+           *dest++ = char_to_hex( (unsigned char)(ch >> 4) );   
+           *dest++ = char_to_hex( (unsigned char)(ch % 16) );   
+       }    
+       ++src;   
+       ++len;   
+   }   
+   *dest = 0;   
+   return (char*)dest;   
+
+}
+
+
+codec* instance(std::string name)
+{
+    auto it = m.find(name);
+    if (it == m.end()) {
+        return NULL;
+    }
+
+    return it->second();
+}
+
+
+bool regist(std::string name,creator ctr)
+{
+    if (m.find(name) == m.end()) {
+        m[name] = ctr; 
+        char buf[64];
+        snprintf(buf,sizeof(buf),"%s编码解析注册成功",name.c_str());
+        log::trace(time(NULL),__FUNCTION__,std::string(buf),level::print);
+        return false;
+    }
+
+    return true;
+}
+
+bool regist_url = regist("url",codec_url::getter);
 }}

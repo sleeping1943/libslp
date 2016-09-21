@@ -34,6 +34,7 @@ namespace slp{namespace log{
 
         bool log::trace(time_t tt,std::string func,std::string msg,level l) {
             lock_guard<mutex> tmp_guard(log::m);
+#if 1
             switch (l) {
                 case error:         
                     cout << slp::RED << log::time_now(tt) << " [" << func <<"] " << msg << slp::NONE << endl;
@@ -51,6 +52,9 @@ namespace slp{namespace log{
                     cout << slp::LIGHT_GRAY << log::time_now(tt) << " [" << func <<"] " << msg << slp::NONE << endl;
                     break;
             }
+#else
+            cout << log::time_now(tt) << " [" << func <<"] " << msg << endl;
+#endif
             return true;
         }
       mutex log::m;
