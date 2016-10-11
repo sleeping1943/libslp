@@ -19,8 +19,14 @@ extern "C" {
 }
 #endif
 
+
 /*
- *定义lua调用的C函数
+ *TODO 类中的函数若包含成员，则调用失败，段错误
+ */
+
+/**
+ * @brief 定义lua调用的C函数
+ * @param itemname C/C++模块名
  */
 #define BEGIN_DEFINE_ITEM(itemname)\
 static const struct luaL_Reg itemname [] = {
@@ -30,7 +36,17 @@ static const struct luaL_Reg itemname [] = {
     {NULL,NULL} \
 };
 
-#define DEFINE_CLASS(CLASSNAME,METANAME)\
+
+/**
+ * @brief 定义C++类并压入栈
+ *
+ * @param CLASSNAME C++类名
+ * @param METANAME 元表名
+ * @param INITMOUDLE 用于绑定的结构块
+ *
+ * @return 入栈参数个数
+ */
+#define DEFINE_CLASS(CLASSNAME,METANAME,INITMOUDLE)\
 int _new_func(lua_State* L) {\
     CLASSNAME* p = (CLASSNAME*)lua_newuserdata(L,sizeof(void*));\
     p = new CLASSNAME;\
@@ -39,13 +55,18 @@ int _new_func(lua_State* L) {\
     return 1;\
 }\
 \
-BEGIN_DEFINE_ITEM(initmoudle)\
+BEGIN_DEFINE_ITEM(INITMOUDLE)\
     ITEM("new",_new_func)\
 END_DEFINE_ITEM\
 
 
-/*
- *注册C函数模块
+/**
+ * @brief 注册C函数模块
+ *
+ * @param name lua中变量名
+ * @param moudle C/C++模块名
+ *
+ * @return 
  */
 #define REGIST(name,moudle)\
 extern "C" int luaopen_##moudle (lua_State *L) {\
@@ -53,8 +74,16 @@ extern "C" int luaopen_##moudle (lua_State *L) {\
     return 1;\
 }
 
-/*
- *注册带元表的C函数模块
+
+/**
+ * @brief 注册带元表的C函数模块
+ *
+ * @param name lua脚本中使用的模块名
+ * @param moudle lua中require的模块名
+ * @param initmoudle C++类的函数定义块
+ * @param metaname 创建类的函数定义块
+ *
+ * @return 无意义 
  */
 #define REGIST_WITH_META(name,moudle,initmoudle,metaname)\
 extern "C" int luaopen_##moudle (lua_State *L) {\
