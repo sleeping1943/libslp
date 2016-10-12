@@ -38,7 +38,7 @@ static const struct luaL_Reg itemname [] = {
 
 
 /**
- * @brief 定义C++类并压入栈
+ * @brief 定义C++类并压入栈,定义回收垃圾的函数
  *
  * @param CLASSNAME C++类名
  * @param METANAME 元表名
@@ -48,12 +48,22 @@ static const struct luaL_Reg itemname [] = {
  */
 #define DEFINE_CLASS(CLASSNAME,METANAME,INITMOUDLE)\
 int _new_func(lua_State* L) {\
-    CLASSNAME* p = (CLASSNAME*)lua_newuserdata(L,sizeof(void*));\
-    p = new CLASSNAME;\
+    CLASSNAME** p = (CLASSNAME**)lua_newuserdata(L,sizeof(void*));\
+    *p = new CLASSNAME;\
     luaL_getmetatable(L,METANAME);\
     lua_setmetatable(L,-2);\
     return 1;\
 }\
+\
+int _destroy(lua_State* L) {\
+    CLASSNAME** pclass = (CLASSNAME**)luaL_checkudata(L,1,METANAME);\
+    if (*pclass) {\
+       delete *pclass;\
+       *pclass = NULL;\
+    }\
+    return 0;\
+}\
+\
 \
 BEGIN_DEFINE_ITEM(INITMOUDLE)\
     ITEM("new",_new_func)\
@@ -76,7 +86,7 @@ extern "C" int luaopen_##moudle (lua_State *L) {\
 
 
 /**
- * @brief 注册带元表的C函数模块
+ * @brief 注册带元表和垃圾回收的C/C++函数模块
  *
  * @param name lua脚本中使用的模块名
  * @param moudle lua中require的模块名
@@ -88,6 +98,10 @@ extern "C" int luaopen_##moudle (lua_State *L) {\
 #define REGIST_WITH_META(name,moudle,initmoudle,metaname)\
 extern "C" int luaopen_##moudle (lua_State *L) {\
     luaL_newmetatable(L,metaname);\
+    lua_pushstring(L,"__gc");\
+    lua_pushcfunction(L,_destroy);\
+    lua_settable(L,-3);\
+\
     lua_pushvalue(L,-1);\
     lua_setfield(L,-2,"__index");\
     luaL_register(L,NULL,moudle);\
