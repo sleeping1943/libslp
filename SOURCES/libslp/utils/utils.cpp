@@ -50,12 +50,12 @@ namespace slp{namespace utils{
     void credis::disconnect() {
         /* 释放与服务器的连接 */
         if (!m_conn) {
-	    redisFree(m_conn);
-	    m_conn = NULL;
-	    this->m_isconn = false;
-	    log::trace(time(NULL),__FUNCTION__ ,string("redis服务器关闭!"),level::error);	
-    }
-}
+			redisFree(m_conn);
+			m_conn = NULL;
+			this->m_isconn = false;
+			log::trace(time(NULL),__FUNCTION__ ,string("redis服务器关闭!"),level::error);	
+		}
+	}
 
     bool credis::sendstr(const string& cmd,const string& key,const string& data) {
         string str_send = cmd;
@@ -74,6 +74,7 @@ namespace slp{namespace utils{
 	        freeReplyObject(preply);
 	        return false;
         }
+
         return true;
     }
 
@@ -121,4 +122,13 @@ namespace slp{namespace utils{
         }
         return true;
     }
+
+
+	bool credis::set_timeout(const struct timeval& tv) {
+		if (!isconnected()) {
+        	log::trace(time(NULL),__FUNCTION__ ,string("未连接到服务器!"),level::error);
+			return false;	
+		}
+		return REDIS_OK == redisSetTimeout(m_conn,tv);
+	}
 }};

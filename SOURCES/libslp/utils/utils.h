@@ -94,6 +94,16 @@ namespace slp{namespace utils{
              * @return true:连接畅通 false:连接断开
              */
             bool isconnected();
+
+
+			/**
+			 * @brief 设置redis命令的超时时间
+			 *
+			 * @param tv 超时时间
+			 *
+			 * @return true 成功 false 失败
+			 */
+			bool set_timeout(const struct timeval& tv);
         private:
             redisContext* m_conn;
             bool m_isconn;
