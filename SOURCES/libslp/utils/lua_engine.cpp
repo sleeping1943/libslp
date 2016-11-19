@@ -3,7 +3,7 @@
 #include <string>
 #include <string.h>
 #include "lua_engine.h"
-#include <libslp/log.h>
+#include "log.h"
 
 using slp::log::log;
 using slp::log::level;

@@ -8,7 +8,7 @@ License:        GPL
 URL:            NULL
 #Source0:       
 
-BuildRequires: gcc-c++ >= 4.8.5 
+BuildRequires: gcc-c++ >= 4.8.3
 Requires:      libevent 
 
 %description
@@ -48,7 +48,7 @@ This library is builded to help myself
 %package devel
 Summary:        Development files for %{name} 
 Group:          Development/Libraries
-BuildRequires:  gcc-c++ >= 4.8.5 
+BuildRequires:  gcc-c++ >= 4.8.3
 Requires:       %{name} = %{?version}
 %description devel
 The signs for libslp

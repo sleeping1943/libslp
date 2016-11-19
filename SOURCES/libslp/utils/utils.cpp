@@ -75,6 +75,7 @@ namespace slp{namespace utils{
 	        return false;
         }
 
+        freeReplyObject(preply);
         return true;
     }
 
@@ -96,6 +97,7 @@ namespace slp{namespace utils{
 	        freeReplyObject(preply);
 	        return false;
         }
+        freeReplyObject(preply);
         return true;
     }
 
@@ -118,6 +120,7 @@ namespace slp{namespace utils{
 	        return false;
         } else {
 	        data.append(preply->str,preply->len);
+            freeReplyObject(preply);
 	        return true;
         }
         return true;
