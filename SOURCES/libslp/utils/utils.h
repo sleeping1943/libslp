@@ -21,13 +21,21 @@
 namespace slp{namespace utils{
     
     /**
-     * @brief 获取当前事件的字符串
-     *
+     * @brief      *
      * @param buf 字符串缓冲区
      *
      * @return true:成功 false:失败
      */
-    bool get_time_str(char* buf);    
+
+	/**
+	 * @brief 获取当前时间的字符串
+	 *
+	 * @param buf 当前时间字符串缓冲区
+	 * @param is_exact 是否精确到时分秒
+	 *
+	 * @return 
+	 */
+    bool get_time_str(char* buf,bool is_exact=true);
 
 
     using std::string;

@@ -13,11 +13,15 @@ namespace slp{namespace utils{
 
     using slp::log::log;
     using slp::log::level;
-    bool get_time_str(char* buf) {
+    bool get_time_str(char* buf,bool is_exact) {
         time_t t = time(NULL); 
         struct tm* tt = localtime(&t); 
-      	sprintf(buf, "%d-%02d-%02d %02d:%02d:%02d", 1900 + tt->tm_year,1 + tt->tm_mon, 
-			tt->tm_mday, tt->tm_hour, tt->tm_min,tt->tm_sec);
+		if (is_exact) {
+      		sprintf(buf, "%d-%02d-%02d %02d:%02d:%02d", 1900 + tt->tm_year,1 + tt->tm_mon, 
+					tt->tm_mday, tt->tm_hour, tt->tm_min,tt->tm_sec);
+		} else {
+      		sprintf(buf, "%d-%02d-%02d", 1900 + tt->tm_year,1 + tt->tm_mon, tt->tm_mday);
+		}
 	    return true;
     }
 
