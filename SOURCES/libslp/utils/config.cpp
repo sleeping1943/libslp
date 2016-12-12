@@ -1,102 +1,85 @@
 #include "config.h"
+#include <fstream>
+#include <iostream>
 
 namespace slp { namespace utils {
-		config* config::instance() 
-		{
-			static config c;
-			return &c;
-		};
 
-		void config::init (std::string bn,std::string path,unsigned short ss,unsigned int rs,unsigned int rc)
-		{
-			is_init 		= true;
-			log_name 		= bn;
-			log_path 		= path;
-			sleep_seconds 	= ss;
-			record_size 	= rs;
-			record_count 	= rc;
+        std::string trim(const std::string& str);
 
-			start();
-		};
-
-		config::~config () { stop(); };
-
-		bool config::append (std::string content) 
-		{
-			if (!is_init || content.empty() || content.size() > record_size) {
-				return false; 
-			}
-
-			unique_lock<mutex> _lock(m_mutex);
-			char buf[64];
-			bzero(buf,sizeof(buf));
-			slp::utils::get_time_str(buf);
-			string str = buf;
-			str += " ";
-			str += content;
-			q_log.push(str);
-			//++wcount;
-
-			if (q_log.size() >= record_count && q_reserve_log.empty()) {
-				std::swap(q_log,q_reserve_log);	
-				cond.notify_one();
-			} else {
-				return false;	
-			}
-
-			return true;	
-		};
+        config* config::instance()
+        {
+            static config c;
+            return &c;
+        }
 
 
-		void config::start()
-		{
-			thread t(&config::thread_func,this);
-			t.detach();
-		}
+        bool config::set_filename(const std::string &path)
+        {
+            this->m_filename = path;
+            return true;
+        }
 
-		void config::stop()
-		{
-			is_init = false;
-		}
 
-		void config::thread_func()
-		{
-			queue<string> buf;
-			while (true) {
-				unique_lock<mutex> _lock(m_mutex);
-				cond.wait_for(_lock,std::chrono::seconds(sleep_seconds), [] () { return false;} );
-				if (!q_log.empty() && q_reserve_log.empty()) {
-					std::swap(q_log,q_reserve_log);	
-					//cout << "\033[31m swap q_log and q_reserve_log" << "!!\033[m\n";
-				}
+        bool config::parser_config(const std::string &fname)
+        {
+            if (!fname.empty()) {
+                std::fstream f(fname); 
+                if (f.is_open()) {
+                    m.clear();
+                    std::forward_list<std::string> l;
+                    char buf[1024*4];
+                    while (!f.eof()) {
+                        bzero(buf,sizeof(buf)-1);
+                        f.getline(buf,sizeof(buf)-1);
+                        std::string str(buf);
+                        str = trim(str);
+                        if (!str.empty() && '#' != str[0])
+                            l.push_front(str);
+                    }
 
-				//cout << "\033[31m wait_for over" << "!!\033[m\n";
-				if (!q_reserve_log.empty()) {
-					/* 根据日期和文件名构建日志文件名*/
-					char name_buf[64];
-					bzero(name_buf,sizeof(name_buf));
-					slp::utils::get_time_str(name_buf,false);
-					string fname = log_path;
-					fname += name_buf;
-					fname += "-";
-					fname += log_name;
-					fstream f(fname,std::ios::out | std::ios::app);
+                    f.close();
+                    str2map(l);
+                    return true;
+                }
+            }
+            return false;
+        }
 
-					if (!f.is_open())  { 
-						//cout << "\033[31m 打开文件失败" << "!!\033[m\n";
-						continue; 
-					}
-					std::swap(q_reserve_log,buf);
 
-					while (!buf.empty()) {
-						f << buf.front() << endl;
-						buf.pop();
-					}
+        bool config::str2map(std::forward_list<std::string> l)
+        {
+            for (const auto &it : l) {
+                std::string::size_type delim = it.find_first_of(' ');
+                if (std::string::npos != delim) {
+                    m[it.substr(0,delim)] = trim(it.substr(delim));
+                }
+            }
+            return true;
+        }
 
-					if (f.is_open()) { f.close(); }
-				} 
-				_lock.unlock();
-			}
-			//cout << "\033[31m thread_func over" << "!!\033[m\n";
-		}
-}};
+        std::string config::get_value(std::string key)
+        {
+            if (m.find(key) != m.end()) {
+                return m[key]; 
+            }
+            return "";
+        }
+
+        void config::dump()
+        {
+            std::cout << "m.size():" << m.size() << std::endl;
+            for (const auto &it : m) {
+                std::cout << "first:" << it.first << " second:" << get_value(it.first) << std::endl; 
+            }
+        }
+
+        std::string trim(const std::string& str) 
+        {
+            std::string::size_type beg = str.find_first_not_of(' ');
+            std::string::size_type end = str.find_last_not_of(' ');
+            if (beg != std::string::npos && end != std::string::npos)  {
+                return str.substr(beg,end-beg+1); 
+            }
+            return str;
+        }
+}}
