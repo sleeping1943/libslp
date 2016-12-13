@@ -22,19 +22,19 @@
 
 #include "utils.h"
 
-using std::cout;
-using std::endl;
-using std::mutex;
-using std::queue;
-using std::string;
-using std::thread;
-using std::fstream;
-using std::lock_guard;
-using std::unique_lock;
-using std::condition_variable;
-
-
 namespace slp { namespace utils {
+
+		using std::cout;
+		using std::endl;
+		using std::mutex;
+		using std::queue;
+		using std::string;
+		using std::thread;
+		using std::fstream;
+		using std::lock_guard;
+		using std::unique_lock;
+		using std::condition_variable;
+
 		class dlog {
 			public:
 
