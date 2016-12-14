@@ -1,13 +1,13 @@
-#include "dlog.h"
+#include "asynclog.h"
 
 namespace slp { namespace utils {
-		dlog* dlog::instance() 
+		asynclog* asynclog::instance() 
 		{
-			static dlog c;
+			static asynclog c;
 			return &c;
 		};
 
-		void dlog::init (std::string bn,std::string path,unsigned short ss,unsigned int rs,unsigned int rc)
+		void asynclog::init (std::string bn,std::string path,unsigned short ss,unsigned int rs,unsigned int rc)
 		{
 			is_init 		= true;
 			log_name 		= bn;
@@ -19,9 +19,9 @@ namespace slp { namespace utils {
 			start();
 		};
 
-		dlog::~dlog () { stop(); };
+		asynclog::~asynclog () { stop(); };
 
-		bool dlog::append (std::string content) 
+		bool asynclog::append (std::string content) 
 		{
 			if (!is_init || content.empty() || content.size() > record_size) {
 				return false; 
@@ -48,18 +48,18 @@ namespace slp { namespace utils {
 		};
 
 
-		void dlog::start()
+		void asynclog::start()
 		{
-			thread t(&dlog::thread_func,this);
+			thread t(&asynclog::thread_func,this);
 			t.detach();
 		}
 
-		void dlog::stop()
+		void asynclog::stop()
 		{
 			is_init = false;
 		}
 
-		void dlog::thread_func()
+		void asynclog::thread_func()
 		{
 			queue<string> buf;
 			while (true) {
@@ -67,10 +67,8 @@ namespace slp { namespace utils {
 				cond.wait_for(_lock,std::chrono::seconds(sleep_seconds), [] () { return false;} );
 				if (!q_log.empty() && q_reserve_log.empty()) {
 					std::swap(q_log,q_reserve_log);	
-					//cout << "\033[31m swap q_log and q_reserve_log" << "!!\033[m\n";
 				}
 
-				//cout << "\033[31m wait_for over" << "!!\033[m\n";
 				if (!q_reserve_log.empty()) {
 					/* 根据日期和文件名构建日志文件名*/
 					char name_buf[64];
@@ -97,6 +95,5 @@ namespace slp { namespace utils {
 				} 
 				_lock.unlock();
 			}
-			//cout << "\033[31m thread_func over" << "!!\033[m\n";
 		}
 }};

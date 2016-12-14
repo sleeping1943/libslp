@@ -1,5 +1,5 @@
 /**
-* @file dlog.h
+* @file asynclog.h
 * @brief 此头文件定义了日志工具类，异步把日志写入硬盘
 * @author sleeping
 * @version 1.0
@@ -35,15 +35,15 @@ namespace slp { namespace utils {
 		using std::unique_lock;
 		using std::condition_variable;
 
-		class dlog {
+		class asynclog {
 			public:
 
 				/**
-				 * @brief dlog的单例函数
+				 * @brief asynclog的单例函数
 				 *
-				 * @return dlog指针
+				 * @return asynclog指针
 				 */
-				static dlog* instance();
+				static asynclog* instance();
 
 
 				/**
@@ -56,7 +56,7 @@ namespace slp { namespace utils {
 				 * @param rc 	日志记录条数最大值,默认1000条
 				 */
 				void init (std::string bn,std::string path="./",unsigned short ss=5,unsigned int rs=1024,unsigned int rc=1000);
-				virtual ~dlog ();
+				virtual ~asynclog ();
 
 
 				/**
@@ -69,7 +69,7 @@ namespace slp { namespace utils {
 				bool append (std::string content) ;
 
 			private:
-				dlog ():is_init(false) {};
+				asynclog ():is_init(false) {};
 				void start();
 				void stop();
 
