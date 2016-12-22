@@ -49,8 +49,8 @@ namespace slp { namespace utils {
 				/**
 				 * @brief 执行初始化操作并开启线程(异步写入硬盘)
 				 *
-				 * @param bn 	日志文件名称
-				 * @param path  日志文件路径,默认当前路径下
+				 * @param bn 	日志文件名称,如slp.log
+				 * @param path  日志文件路径,默认当前路径下.如/var/log/slp/
 				 * @param ss 	每次写入硬盘的时间间隔,默认5秒
 				 * @param rs 	每条日志记录最大值,默认1k
 				 * @param rc 	日志记录条数最大值,默认1000条
@@ -60,7 +60,7 @@ namespace slp { namespace utils {
 
 
 				/**
-				 * @brief 把含有当前时间的日志信息存入日志缓存
+				 * @brief 把含有当前时间的日志信息存入日志缓存,需先执行init函数进行初始化
 				 *
 				 * @param content 日志信息
 				 *
