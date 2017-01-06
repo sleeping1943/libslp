@@ -100,7 +100,7 @@ typedef struct event_base {
 /*
  *初始化并分配所需的内存
  */
-bool ev_init(event_base *eb,int size);
+bool ev_init(event_base **peb,int size);
 
 /*
  *开始epoll_create

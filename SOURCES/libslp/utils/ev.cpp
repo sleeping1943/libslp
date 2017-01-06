@@ -3,10 +3,12 @@
 #include <stdlib.h>
 #include <strings.h>
 
-bool ev_init(event_base *eb,int size)
+bool ev_init(event_base **peb,int size)
 {
+	event_base *eb;
 	do {
-		eb = (event_base*)malloc(sizeof(event_base));
+		*peb = (event_base*)malloc(sizeof(event_base));
+		eb = *peb;
 		if (!eb) break;
 
 		bzero(eb,sizeof(event_base));
