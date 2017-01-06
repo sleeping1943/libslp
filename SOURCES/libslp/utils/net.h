@@ -14,6 +14,9 @@
 #include <sys/socket.h>
 
 
+#ifndef ERROR_LEN
+	#define ERROR_LEN 1024
+#endif
 
 /**
  * @brief 网络工具类命名空间
@@ -64,5 +67,76 @@ namespace slp{namespace net{
      * @return true：连接正常，false:连接断开
      */
     bool isalive (int fd);
+
+
+	/**
+	 * @brief 获取本地协议的ip和port
+	 *
+	 * @param fd 已建立浩的连接描述符
+	 * @param ip 返回参数，解析后的ip地址
+	 * @param port 返回参数，解析后的port端口
+	 *
+	 * @return true 成功 false 失败
+	 */
+	bool get_socket_name(int fd, char *ip, short *port);
+
+
+	/**
+	 * @brief 获取远程协议的ip和port
+	 *
+	 * @param fd 已建立好的连接描述符
+	 * @param ip 返回参数,解析后的ip地址
+	 * @param port 返回参数，解析后的port端口
+	 *
+	 * @return  true 成功 false 失败
+	 */
+	bool get_peer_name(int fd, char *ip, short *port);
+
+
+	/**
+	 * @brief 设置给定描述符为非阻塞
+	 *
+	 * @param fd 有效的描述符
+	 * @param err 出错信息
+	 *
+	 * @return  true 成功 false 失败
+	 */
+	bool setsocknonblock(int fd, char *err);
+
+	/**
+	 * @brief 创建新的socket,并设置地址重用
+	 *
+	 * @param pfd 返回参数，创建成功返回的socket描述符
+	 * @param err 出错信息
+	 *
+	 * @return  true 成功 false 失败
+	 */
+	bool create_socket(int *pfd, char *err);
+
+
+	/**
+	 * @brief 绑定，监听指定的地址和端口
+	 *
+	 * @param fd 有效的socketfd
+	 * @param sa 有效的socket地址
+	 * @param len sa的地址内存长度
+	 * @param err 出错信息
+	 *
+	 * @return true 成功 false 失败
+	 */
+	bool _listen(int fd, struct sockaddr *sa, socklen_t len, char *err);
+
+
+	/**
+	 * @brief 创建服务器socket并监听
+	 *
+	 * @param pfd 服务器socketfd
+	 * @param ip  服务器地址
+	 * @param port 服务器端口
+	 * @param err 出错信息
+	 *
+	 * @return  true 成功 false 失败
+	 */
+	bool create_tcp_server(int *pfd, char *ip, short port, char *err);
 }};
 #endif /* _LIBSLP_H */
