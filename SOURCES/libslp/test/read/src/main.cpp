@@ -44,7 +44,6 @@ int main(int argc,char** argv)
 		}
 		if (read_len <= 0) break;
 		printf("\033[32mthe string from server is:\033[31m%s\033[m\n",buf);
-		sleep(1);
 	}
 	if (sockfd) close(sockfd);
 

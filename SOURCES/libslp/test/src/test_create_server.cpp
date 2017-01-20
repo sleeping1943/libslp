@@ -82,5 +82,4 @@ void onread(event_base *eb, int fd, void *, int mask)
 		return;
 	}
 	printf("recive string from client:%s len=%d\n",buf,len);
-
 }
