@@ -9,10 +9,20 @@
 #include <time.h>
 #include <stdio.h>
 #include "log.h"
+#include <algorithm>
+
 namespace slp{namespace utils{
 
     using slp::log::log;
     using slp::log::level;
+	using std::unique;
+
+	struct is_both_blank {
+		bool operator () (const char& x, const char& y) {
+			return x == ' ' && y == ' ';	
+		};	
+	};
+
     bool get_time_str(char* buf,bool is_exact) {
         time_t t = time(NULL); 
         struct tm* tt = localtime(&t); 
@@ -138,4 +148,35 @@ namespace slp{namespace utils{
 		}
 		return REDIS_OK == redisSetTimeout(m_conn,tv);
 	}
+
+
+	bool trim (std::string &str) { 
+		ltrim(str);
+		rtrim(str);
+		str.erase(unique(str.begin(),str.end(), is_both_blank()),str.end());
+		return true;
+	}
+
+	bool ltrim (std::string &str) { 
+		string::size_type pos = str.find_first_not_of(" ");
+		if (pos != string::npos) {
+			string::iterator it = str.begin();
+			str.erase(it, it+pos);	
+			return true;
+		}
+		return false;
+	}
+
+	bool rtrim (std::string &str) {
+		string::size_type pos_blank = str.find_last_of(" ");	
+		string::size_type pos_char 	= str.find_last_not_of(" ");	
+	
+		if (pos_blank != string::npos && pos_char != string::npos && pos_blank > pos_char) {
+			str.erase(pos_char+1);	
+			return true;
+		}
+		return false;
+	}
+
+
 }};

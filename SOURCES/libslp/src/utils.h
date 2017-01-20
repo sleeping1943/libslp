@@ -20,12 +20,7 @@
  */
 namespace slp{namespace utils{
     
-    /**
-     * @brief      *
-     * @param buf 字符串缓冲区
-     *
-     * @return true:成功 false:失败
-     */
+    using std::string;
 
 	/**
 	 * @brief 获取当前时间的字符串
@@ -38,7 +33,32 @@ namespace slp{namespace utils{
     bool get_time_str(char* buf,bool is_exact=true);
 
 
-    using std::string;
+	/**
+	 * @brief 去除左侧和右侧的空白字符，字符串中的字符
+	 *
+	 * @param str 待处理的字符串
+	 *
+	 * @return  true 成功 false 失败
+	 */
+	bool trim (std::string &str);
+
+	/**
+	 * @brief 去除左侧空白字符串
+	 *
+	 * @param str 待处理字符串
+	 *
+	 * @return  true 成功 false 失败
+	 */
+	bool ltrim (std::string &str);
+
+	/**
+	 * @brief 去除右侧空白字符串
+	 *
+	 * @param str 待处理字符串
+	 *
+	 * @return  true 成功 false 失败
+	 */
+	bool rtrim (std::string &str);
 
     /**
      * @brief  此类用于和redis服务器通信，包装了hiredis库,
