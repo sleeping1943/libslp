@@ -30,3 +30,4 @@ show:
 clean:
 	$(RM) $(objs)
 	${RM} ${target}${suffix}
+	@make clean -C ./test

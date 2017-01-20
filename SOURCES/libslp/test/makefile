@@ -6,6 +6,8 @@ test_create_server:./src/test_create_server.cpp
 	g++ -g -o $@ $^ -lslp_utils -llua
 
 clean:
-	rm -f test_create_server
-	rm -f ./src/*.o
+	@rm -f test_create_server
+	@rm -f ./src/*.o
+	@make  clean -C ./read
+	@make  clean -C ./write
 
