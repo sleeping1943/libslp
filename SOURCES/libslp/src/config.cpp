@@ -4,21 +4,13 @@
 
 namespace slp { namespace utils {
 
-        std::string trim(const std::string& str);
+		char ctrl2asc (char);	
 
         config* config::instance()
         {
             static config c;
             return &c;
         }
-
-
-        bool config::set_filename(const std::string &path)
-        {
-            this->m_filename = path;
-            return true;
-        }
-
 
         bool config::parser_config(const std::string &fname)
         {
@@ -31,8 +23,10 @@ namespace slp { namespace utils {
                     while (!f.eof()) {
                         bzero(buf,sizeof(buf)-1);
                         f.getline(buf,sizeof(buf)-1);
+
                         std::string str(buf);
-                        str = trim(str);
+						std::transform(str.begin(),str.end(),str.begin(),ctrl2asc);
+                        trim(str);
                         if (!str.empty() && '#' != str[0])
                             l.push_front(str);
                     }
@@ -51,7 +45,9 @@ namespace slp { namespace utils {
             for (const auto &it : l) {
                 std::string::size_type delim = it.find_first_of(' ');
                 if (std::string::npos != delim) {
-                    m[it.substr(0,delim)] = trim(it.substr(delim));
+					std::string value = it.substr(delim);
+					trim(value);
+                    m[it.substr(0,delim)] = value;
                 }
             }
             return true;
@@ -69,17 +65,13 @@ namespace slp { namespace utils {
         {
             std::cout << "m.size():" << m.size() << std::endl;
             for (const auto &it : m) {
-                std::cout << "first:" << it.first << " second:" << get_value(it.first) << std::endl; 
+				std::cout << slp::GREEN << it.first << slp::RED << ":" << slp::YELLOW << "["
+									<< get_value(it.first) << "]" <<  slp::NONE << std::endl; 
             }
         }
 
-        std::string trim(const std::string& str) 
-        {
-            std::string::size_type beg = str.find_first_not_of(' ');
-            std::string::size_type end = str.find_last_not_of(' ');
-            if (beg != std::string::npos && end != std::string::npos)  {
-                return str.substr(beg,end-beg+1); 
-            }
-            return str;
-        }
+		char ctrl2asc (char c) {
+			return std::iscntrl(c) ? ' ' : c;	
+		}
 }}
+

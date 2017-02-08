@@ -12,8 +12,8 @@
 #include <iostream>
 #include <string>
 #include <strings.h>
-#include <libslp/net.h>
-#include <libslp/log.h>
+#include <libshelper/net.h>
+#include <libshelper/log.h>
 
 using namespace std;
 

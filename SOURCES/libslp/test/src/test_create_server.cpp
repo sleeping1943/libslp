@@ -1,8 +1,8 @@
 
 #include <unistd.h>
 #include <stdio.h>
-#include <libslp/net.h>
-#include <libslp/ev.h>
+#include <libshelper/net.h>
+#include <libshelper/ev.h>
 
 void _accept(event_base *eb, int fd, void *data, int mask);
 void onread(event_base *eb, int fd, void *data, int mask);
