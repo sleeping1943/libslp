@@ -51,6 +51,8 @@ namespace slp { namespace utils {
 				type get_type () const { return type_; };
 				void set_type (type t) { type_ = t; };
 				std::string get_str () const { return str_; };
+				void set_str (const std::string &str) { str_ = str; };
+				std::string get_type_str();
 
 				operator int() const;
 				operator bool() const;

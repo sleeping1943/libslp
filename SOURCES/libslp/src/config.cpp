@@ -33,7 +33,8 @@ namespace slp { namespace utils {
 		std::string transtype::operator =(const std::string& that) {
 			if (that.empty()) return "";
 			this->str_ = that;	
-			set_type(get_type_from_string(str_));
+			set_type(t_str);
+			/*set_type(get_type_from_string(str_));*/
 			return str_;
 		};
 
@@ -43,6 +44,22 @@ namespace slp { namespace utils {
 			swap(*this,tt);
 			return *this;
 		};
+
+		std::string transtype::get_type_str() {
+			switch (this->type_) {
+			case t_int:
+				return "int";
+			case t_str:
+				return "string";
+			case t_bool:
+				return "bool";
+			case t_other:
+			default:
+				return "unknow";
+			};
+
+			return "";
+		}
 
         config* config::instance()
         {
@@ -96,31 +113,7 @@ namespace slp { namespace utils {
 
 		std::string config::get_value(std::string key) {
 	        if (m.find(key) != m.end()) {
-				std::string value = m[key];
-				type t = get_type_from_string(value);
-				if (t_str == get_type_from_string(value)) {
-					std::vector<char> vec(value.begin(),value.end());
-					auto it_begin = vec.begin();
-					auto it_end = vec.end();
-					int offset = std::distance(it_begin,--it_end);
-					value.assign(it_begin+1,it_begin+offset);		
-				}
-
-				/*switch (t) {
-				case t_int:
-					std::cout << __func__ << value << " type=int" << std::endl;
-					break;
-				case t_str:
-					std::cout << __func__ << value << " type=str" << std::endl;
-					break;
-				case t_bool:
-					std::cout << __func__ << value << " type=bool" << std::endl;
-					break;
-				case t_other:
-					std::cout << __func__ << value << " type=other" << std::endl;
-					break;
-				}*/
-                return value; 
+                return m[key];
             }
             return "";
 	
@@ -128,7 +121,21 @@ namespace slp { namespace utils {
 
         transtype config::get_generic_value(std::string key)
         {
-			return get_value(key);
+			std::string value = get_value(key);
+			type t = get_type_from_string(value);
+			transtype tt;
+			tt.set_type(t);
+			if (t_str == t) {
+				std::vector<char> vec(value.begin(),value.end());
+				auto it_begin = vec.begin();
+				auto it_end = vec.end();
+				int offset = std::distance(it_begin,--it_end);
+				value.assign(it_begin+1,it_begin+offset);		
+				tt = value;
+			} else {
+				tt.set_str(value);	
+			}
+			return tt;
         }
 
         void config::dump()
