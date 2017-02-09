@@ -57,7 +57,7 @@ namespace slp{namespace utils{
 	        return false;
         }
         this->m_isconn = true;
-        log::trace(time(NULL),__FUNCTION__ ,string("连接服务器成功!"),level::print);
+        log::trace(time(NULL),__FUNCTION__ ,string("连接redis服务器成功[connect to redis-server succesfully]"),level::print);
         return true;
     }
 
@@ -67,7 +67,7 @@ namespace slp{namespace utils{
 			redisFree(m_conn);
 			m_conn = NULL;
 			this->m_isconn = false;
-			log::trace(time(NULL),__FUNCTION__ ,string("redis服务器关闭!"),level::error);	
+			log::trace(time(NULL),__FUNCTION__ ,string("断开与redis服务器的连接[close socket with redis server]"),level::error);	
 		}
 	}
 

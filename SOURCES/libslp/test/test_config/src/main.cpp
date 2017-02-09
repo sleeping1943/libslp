@@ -26,6 +26,9 @@ int main (int argc, char** argv)
 	pc->parser_config(argv[1]);
 	pc->dump();
 
+	bool is_server_fork = std::atoi(pc->get_value("is_server_fork").data());
+	printf("\033[32mis_server_fork=%s\033[m\n",is_server_fork ? "true" : "false");
+	printf("\033[32mwork_db_host=%s1\033[m\n",pc->get_value("worker_db_host").data());
 	return 0;
 }
 

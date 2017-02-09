@@ -10,21 +10,67 @@
 #ifndef _SLP_CONFIG_H
 #define _SLP_CONFIG_H
 
+#include <iostream>
 #include <string>
 #include <algorithm>
 #include <unordered_map>
 #include <forward_list>
 #include <strings.h>
+#include <vector>
 
 #include "textcolor.h"
 #include "utils.h"
 
 namespace slp { namespace utils {
 
+		enum type {
+			t_int	=	0,
+			t_str	=	1,
+			t_bool	=	2,
+			t_other	=	3
+		};
 
-	/**
-	 * @brief 读取配置文件，以键值对形式存储内存中
-	 */
+		type get_type_from_string (const string& str);
+
+		class transtype final {
+			public:
+				transtype() {};
+				transtype(const transtype &tt) {
+					this->str_ = tt.get_str();
+					this->set_type(tt.get_type());
+				};
+				transtype(const std::string& str) { 
+					if (str.empty()) return;
+
+					str_.assign(str.begin(),str.end());
+					set_type(get_type_from_string(str_));
+				};
+				~transtype() {};
+
+				bool isvalid () { return !str_.empty(); };
+				type get_type () const { return type_; };
+				void set_type (type t) { type_ = t; };
+				std::string get_str () const { return str_; };
+
+				operator int() const;
+				operator bool() const;
+				operator std::string() const;
+				std::string operator =(const std::string& that);
+				transtype operator =(const transtype& that);
+
+
+				friend std::ostream& operator <<(std::ostream& os,transtype &tt) {
+					os << tt.str_;
+					return os;
+				};
+			private:
+				type type_;
+				std::string str_;
+		};
+
+		/**
+		 * @brief 读取配置文件，以键值对形式存储内存中
+		 */
         class config {
             public:
                 virtual ~config(){};
@@ -48,19 +94,35 @@ namespace slp { namespace utils {
 
 
 				/**
-				 * @brief 获取指定key的值
+				 * @brief 获取指定key的值,去除字符串前后的"
 				 *
 				 * @param key 配置文件选项值
 				 *
 				 * @return  key的值
 				 */
-                std::string get_value(std::string key);
+				std::string get_value(std::string key);
 
 
+				/**
+				 * @brief 获取字符串包装类便于转换
+				 *
+				 * @param key 配置文件中的key
+				 *
+				 * @return  value的包装类
+				 */
+        		transtype get_generic_value(std::string key);
 				/**
 				 * @brief 输出map中存储的key-value
 				 */
                 void dump();
+
+
+				/**
+				 * @brief 是否已经解析过配置文件，map中收否有值
+				 *
+				 * @return 已解析过配置，map中有值
+				 */
+				bool empty ();
             private:
                 config(){};
                 bool str2map(std::forward_list<std::string> l);
