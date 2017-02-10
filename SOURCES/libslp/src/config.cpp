@@ -29,6 +29,45 @@ namespace slp { namespace utils {
 			return "";
 		};
 
+		int transtype::to_int () {
+			if (t_int == this->type_) {
+				return int(*this);	
+			} else {
+				char buf[1024] = {0};
+				std::snprintf(buf,sizeof(buf)/sizeof(buf[0])-1,
+								"期待类型为int，实际类型为%s",get_type_str().data());
+				throw typexception(buf);
+			}
+
+			return 0;
+		}
+
+		bool transtype::to_bool() {
+			if (t_bool == this->type_) {
+				return bool(*this);	
+			} else {
+				char buf[1024] = {0};
+				std::snprintf(buf,sizeof(buf)/sizeof(buf[0])-1,
+								"期待类型为bool，实际类型为%s",get_type_str().data());
+				throw typexception(buf);
+			}
+
+			return false;
+		}
+
+		std::string transtype::to_string() {
+			if (t_str == this->type_) {
+				return this->str_;	
+			} else {
+				char buf[1024] = {0};
+				std::snprintf(buf,sizeof(buf)/sizeof(buf[0])-1,
+								"期待类型为string，实际类型为%s",get_type_str().data());
+				throw typexception(buf);
+			}
+
+			return "";
+		}
+
 
 		std::string transtype::operator =(const std::string& that) {
 			if (that.empty()) return "";
@@ -171,6 +210,15 @@ namespace slp { namespace utils {
 
 		char ctrl2asc (char c) {
 			return std::iscntrl(c) ? ' ' : c;	
+		}
+
+
+		typexception::typexception(const std::string &str) {
+			err_str_ = str;	
+		}
+
+		const char* typexception::what () const throw() {
+			return err_str_.c_str();
 		}
 }}
 

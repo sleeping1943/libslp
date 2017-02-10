@@ -17,6 +17,7 @@
 #include <forward_list>
 #include <strings.h>
 #include <vector>
+#include <exception>
 
 #include "textcolor.h"
 #include "utils.h"
@@ -30,7 +31,9 @@ namespace slp { namespace utils {
 			t_other	=	3
 		};
 
+		class typexception;
 		type get_type_from_string (const string& str);
+
 
 		class transtype final {
 			public:
@@ -60,6 +63,9 @@ namespace slp { namespace utils {
 				std::string operator =(const std::string& that);
 				transtype operator =(const transtype& that);
 
+				int to_int ();
+				bool to_bool();
+				std::string to_string();
 
 				friend std::ostream& operator <<(std::ostream& os,transtype &tt) {
 					os << tt.str_;
@@ -94,17 +100,6 @@ namespace slp { namespace utils {
 				 */
                 bool parser_config(const std::string &fname);
 
-
-				/**
-				 * @brief 获取指定key的值,去除字符串前后的"
-				 *
-				 * @param key 配置文件选项值
-				 *
-				 * @return  key的值
-				 */
-				std::string get_value(std::string key);
-
-
 				/**
 				 * @brief 获取字符串包装类便于转换
 				 *
@@ -130,6 +125,25 @@ namespace slp { namespace utils {
                 bool str2map(std::forward_list<std::string> l);
                 std::string m_filename;
                 std::unordered_map<std::string,std::string> m;
+
+				/**
+				 * @brief 获取指定key的值,包含字符串前后的"
+				 *
+				 * @param key 配置文件选项值
+				 *
+				 * @return  key的值
+				 */
+				std::string get_value(std::string key);
         };
+
+		class typexception : public std::exception {
+			public:
+				typexception() {};	
+				~typexception() {};	
+				typexception(const std::string &str);
+				const char* what () const throw();
+			private: 
+				std::string err_str_;
+		};
 }}; 
 #endif /*_SLP_CONFIG_H*/

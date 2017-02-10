@@ -38,7 +38,7 @@ endif
 .PHONY: show
 
 $(out)/$(target):$(objs)
-	$(CXX) $(LDFLAGS) $@ $^ -lshelper -llua 
+	$(CXX) $(LDFLAGS) $@ $^ -lslp_utils -llua 
 
 $(objs):%.o:%.cpp $(ERR)
 	$(CXX) $(CFLGAS)$@ $< -std=c++11

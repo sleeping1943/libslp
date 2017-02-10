@@ -24,11 +24,15 @@ int main (int argc, char** argv)
 
 	config *pc = config::instance();
 	pc->parser_config(argv[1]);
-	pc->dump();
+	/*pc->dump();*/
 
 	slp::utils::transtype tt = pc->get_generic_value("worker_queue_host");
 	/*printf("\033[32mis_server_fork=%s\033[m\n",is_server_fork ? "true" : "false");*/
-	printf("\033[32mworker_queue_host=%s type=%s\033[m\n",tt.get_str().data(),tt.get_type_str().data());
+	printf("\033[32mworker_queue_host.to_string()=%s type=%s\033[m\n",tt.to_string().data(),tt.get_type_str().data());
+	slp::utils::transtype tt2 = pc->get_generic_value("worker_queue_port");
+	printf("\033[32mworker_queue_host.to_string()=%d type=%s\033[m\n",tt2.to_int(),tt2.get_type_str().data());
+	slp::utils::transtype tt3 = pc->get_generic_value("smtp_enablement");
+	printf("\033[32msmtp_enablement.to_string()=%d type=%s\033[m\n",tt3.to_bool()?1:0,tt3.get_type_str().data());
 	return 0;
 }
 
