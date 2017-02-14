@@ -48,9 +48,9 @@ namespace slp{namespace utils{
         if (m_conn->err) {
 	        redisFree(m_conn);
 	        string str_err;
-	        str_err = "连接服务器失败,地址:IP[";
+	        str_err = "连接服务器失败,IP:";
 	        str_err += ip;
-	        str_err += "] PORT[";
+	        str_err += " PORT:";
 	        str_err += std::to_string(port);
     
 	        log::trace(time(NULL),__FUNCTION__ ,str_err,level::error);
@@ -149,6 +149,25 @@ namespace slp{namespace utils{
 		return REDIS_OK == redisSetTimeout(m_conn,tv);
 	}
 
+	bool credis::isalive() {
+		std::string data(32,'\0');
+		unsigned int len = data.size();
+		redisReply* preply = (redisReply*)redisCommand(m_conn,"ping",data.data(),len);
+        if (NULL == preply) {	return false; }
+        
+        /* 没有数据可以使用 */
+        if (!(preply->type == REDIS_REPLY_NIL) == 0) {
+	        freeReplyObject(preply);
+	        return false;
+        } else {
+	        data.append(preply->str,(preply->len > (int)len) ? len : preply->len);
+            freeReplyObject(preply);
+			std::transform(data.begin(),data.end(),data.begin(),tolower);
+			if (data == "pong") return true;
+        }
+
+		return true;	
+	}
 
 	bool trim (std::string &str) { 
 		ltrim(str);

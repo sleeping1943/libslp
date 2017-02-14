@@ -132,6 +132,13 @@ namespace slp{namespace utils{
 			 * @return true 成功 false 失败
 			 */
 			bool set_timeout(const struct timeval& tv);
+
+			/**
+			 * @brief 检测与redis-server的连接是否正常
+			 *
+			 * @return true 正常 false 出现异常，需要断开重连
+			 */
+			bool isalive();
         private:
             redisContext* m_conn;
             bool m_isconn;
